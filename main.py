@@ -1,5 +1,17 @@
 import os
 import sys
+from datetime import datetime
+
+class Task:
+    _id_counter = 1
+
+    def __init__(self, description):
+        self.id = Task._id_counter
+        Task._id_counter =+ 1
+        self.description = description
+        self.status = "todo"
+        self.createdAt = datetime.now()
+        self.updatedAt = datetime.now()
 
 def main():
 
