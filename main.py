@@ -6,7 +6,7 @@ import json
 class Task:
     _id_counter = 1
 
-    def __init__(self, description):
+    def __init__(self, description: str):
         self.id = Task._id_counter
         Task._id_counter =+ 1
         self.description = description
@@ -16,7 +16,7 @@ class Task:
 
 
 class TodoApp():
-    def __init__(self, filename = "tasks.json"):
+    def __init__(self, filename: str = "tasks.json"):
         self.filename = filename
         self.init_app()
 
@@ -29,6 +29,24 @@ class TodoApp():
             }
             with open(self.filename, "w") as db:
                 json.dump(data, db, indent=2)
+
+    def add_task(self, title: str):
+        pass
+
+    def update_task(self, task: Task):
+        pass
+
+    def delete_task(self, task: Task):
+        pass
+
+    def list_task(self, task: Task):
+        pass
+
+    def list_tasks(self):
+        pass
+
+    def save_task(self, task: Task):
+        pass
 
 def main():
     if len(sys.argv) < 2:
