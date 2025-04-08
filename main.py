@@ -8,27 +8,55 @@ class Task:
         self.id = id
         self.description = description
         self.status = "todo"
-        self.createdAt = datetime.now()
-        self.updatedAt = datetime.now()
+        self.createdAt = datetime.now().strftime("%A, %B %d, %Y %I:%M %p")
+        self.updatedAt = datetime.now().strftime("%A, %B %d, %Y %I:%M %p")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "description": self.description,
+            "status": self.status,
+            "createdAt": self.createdAt,
+            "updatedAt": self.updatedAt
+        }
 
 
 class TodoApp():
     def __init__(self, filename: str = "tasks.json"):
         self.filename = filename
+        self.id_count = 1
+        self.total_tasks = 0
+        self.tasks = {}
         self.init_app()
 
     def init_app(self):
         if not os.path.exists(self.filename):
             data = {
-                "id_count": 1,
-                "total_tasks": 0,
-                "tasks": {}
+                "id_count": self.id_count,
+                "total_tasks": self.total_tasks,
+                "tasks": self.tasks
             }
             with open(self.filename, "w") as db:
                 json.dump(data, db, indent=2)
+        
+        with open(self.filename, "r") as db:
+            data = json.load(db)
+            self.id_count = data.get("id_count")
+            self.total_tasks = data.get("total_tasks")
+            self.tasks = data.get("tasks")
 
     def add_task(self, title: str):
-        pass
+        task = Task(title, id=self.id_count)
+        self.id_count += 1
+        self.total_tasks += 1
+        self.tasks[task.id] = task.to_dict()
+        data = {
+                "id_count": self.id_count,
+                "total_tasks": self.total_tasks,
+                "tasks": self.tasks
+            }
+        with open(self.filename, "w") as db:
+            json.dump(data, db, indent=2)
 
     def update_task(self, task: Task):
         pass
@@ -42,19 +70,19 @@ class TodoApp():
     def list_tasks(self):
         pass
 
-    def save_task(self, task: Task):
-        pass
-
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python main.py <command> [arg]")
+        print("Invalid!\nUsage: python main.py <command> [arg]")
         return
     
     app = TodoApp()
 
     match sys.argv[1]:
         case 'add':
-            print("Task added")
+            if len(sys.argv) != 3:
+                print("Invalid!\nUsage: python main.py add \"Task title\"")
+                return
+            app.add_task(sys.argv[2])
         case 'update':
            print("Task updated")
         case 'delete':
