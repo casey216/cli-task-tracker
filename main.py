@@ -89,7 +89,7 @@ class TodoApp():
                         print(tasks["description"], tasks["status"])
             case 'in-progress':
                 for tasks in self.tasks.values():
-                    if tasks["status"] == 'in-progres':
+                    if tasks["status"] == 'in-progress':
                         print(tasks["description"], tasks["status"])
             case _:
                 print("Invalid Argument.\nUse todo, done or in-progress")
@@ -105,6 +105,36 @@ class TodoApp():
 
     def get_task(self, task_id: int):
         return self.tasks.get(task_id)
+
+    def mark_done(self, task_id):
+        task = self.get_task(task_id)
+        if not task:
+            print(f"Task {task_id} does not exist")
+        else:
+            task["status"] = 'done'
+            self.save_tasks()
+            print(f"Task {task_id} has been marked as done")
+
+    def mark_in_progress(self, task_id):
+        task = self.get_task(task_id)
+        if not task:
+            print(f"Task {task_id} does not exist")
+        else:
+            task["status"] = 'in-progress'
+            self.save_tasks()
+            print(f"Task {task_id} has been marked as in-progress")
+
+
+    def mark_todo(self, task_id):
+        task = self.get_task(task_id)
+        if not task:
+            print(f"Task {task_id} does not exist")
+        else:
+            task["status"] = 'todo'
+            self.save_tasks()
+            
+            print(f"Task {task_id} has been marked as todo")
+
 
 def main():
     if len(sys.argv) < 2:
@@ -130,9 +160,20 @@ def main():
                 return
            app.delete_task(sys.argv[2])
         case 'mark-in-progress':
-            print("Task marked in progress")
+            if len(sys.argv) != 3:
+                print("Invalid!\nUsage: python main.py mark-in-progress task-id")
+                return
+            app.mark_in_progress(sys.argv[2])
         case 'mark-done':
-            print("Task marked as done")
+            if len(sys.argv) != 3:
+                print("Invalid!\nUsage: python main.py mark-done task-id")
+                return
+            app.mark_done(sys.argv[2])
+        case 'mark-todo':
+            if len(sys.argv) != 3:
+                print("Invalid!\nUsage: python main.py mark-todo task-id")
+                return
+            app.mark_todo(sys.argv[2])
         case 'list':
             if len(sys.argv) > 3:
                 print("Invalid!\nUsage: python main.py list [optional arg]")
