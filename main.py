@@ -38,6 +38,7 @@ class TodoApp():
             }
             with open(self.filename, "w") as db:
                 json.dump(data, db, indent=2)
+                return
         
         with open(self.filename, "r") as db:
             data = json.load(db)
@@ -57,9 +58,22 @@ class TodoApp():
             }
         with open(self.filename, "w") as db:
             json.dump(data, db, indent=2)
+        print(f"Task added successfully (ID: {task.id})")
 
-    def update_task(self, task: Task):
-        pass
+    def update_task(self, task_id: int, new_title: str):
+        task = self.get_task(task_id)
+        if not task:
+            print(f"Task {task_id} does not exist")
+        else:
+            task["description"] = new_title
+            data = {
+                "id_count": self.id_count,
+                "total_tasks": self.total_tasks,
+                "tasks": self.tasks
+            }
+            with open(self.filename, "w") as db:
+                json.dump(data, db, indent=2)
+            print(f"Task updated successfully (ID: {task_id})")
 
     def delete_task(self, task: Task):
         pass
@@ -69,6 +83,9 @@ class TodoApp():
 
     def list_tasks(self):
         pass
+
+    def get_task(self, task_id: int):
+        return self.tasks.get(task_id)
 
 def main():
     if len(sys.argv) < 2:
@@ -80,11 +97,14 @@ def main():
     match sys.argv[1]:
         case 'add':
             if len(sys.argv) != 3:
-                print("Invalid!\nUsage: python main.py add \"Task title\"")
+                print("Invalid!\nUsage: python main.py add \"task title\"")
                 return
             app.add_task(sys.argv[2])
         case 'update':
-           print("Task updated")
+           if len(sys.argv) != 4:
+                print("Invalid!\nUsage: python main.py update task_id \"task title\"")
+                return
+           app.update_task(sys.argv[2], sys.argv[3])
         case 'delete':
            print("Task deleted")
         case 'mark-in-progress':
