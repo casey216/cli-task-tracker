@@ -4,11 +4,8 @@ from datetime import datetime
 import json
 
 class Task:
-    _id_counter = 1
-
-    def __init__(self, description: str):
-        self.id = Task._id_counter
-        Task._id_counter =+ 1
+    def __init__(self, description: str, id: int):
+        self.id = id
         self.description = description
         self.status = "todo"
         self.createdAt = datetime.now()
