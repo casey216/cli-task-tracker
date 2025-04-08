@@ -51,13 +51,7 @@ class TodoApp():
         self.id_count += 1
         self.total_tasks += 1
         self.tasks[task.id] = task.to_dict()
-        data = {
-                "id_count": self.id_count,
-                "total_tasks": self.total_tasks,
-                "tasks": self.tasks
-            }
-        with open(self.filename, "w") as db:
-            json.dump(data, db, indent=2)
+        self.save_tasks()
         print(f"Task added successfully (ID: {task.id})")
 
     def update_task(self, task_id: int, new_title: str):
@@ -66,13 +60,7 @@ class TodoApp():
             print(f"Task {task_id} does not exist")
         else:
             task["description"] = new_title
-            data = {
-                "id_count": self.id_count,
-                "total_tasks": self.total_tasks,
-                "tasks": self.tasks
-            }
-            with open(self.filename, "w") as db:
-                json.dump(data, db, indent=2)
+            self.save_tasks()
             print(f"Task updated successfully (ID: {task_id})")
 
     def delete_task(self, task: Task):
@@ -83,6 +71,15 @@ class TodoApp():
 
     def list_tasks(self):
         pass
+
+    def save_tasks(self):
+        data = {
+                "id_count": self.id_count,
+                "total_tasks": self.total_tasks,
+                "tasks": self.tasks
+            }
+        with open(self.filename, "w") as db:
+            json.dump(data, db, indent=2)
 
     def get_task(self, task_id: int):
         return self.tasks.get(task_id)
