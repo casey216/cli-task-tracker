@@ -73,11 +73,26 @@ class TodoApp():
             self.save_tasks()
             print(f"Task deleted successfully (ID: {task_id})")
 
-    def list_task(self, task: Task):
-        pass
-
-    def list_tasks(self):
-        pass
+    def list_tasks(self, filter=None):
+        if not filter:
+            for tasks in self.tasks.values():
+                print(tasks["description"], tasks["status"])
+        
+        match filter:
+            case 'todo':
+                for tasks in self.tasks.values():
+                    if tasks["status"] == 'todo':
+                        print(tasks["description"], tasks["status"])
+            case 'done':
+                for tasks in self.tasks.values():
+                    if tasks["status"] == 'done':
+                        print(tasks["description"], tasks["status"])
+            case 'in-progress':
+                for tasks in self.tasks.values():
+                    if tasks["status"] == 'in-progres':
+                        print(tasks["description"], tasks["status"])
+            case _:
+                print("Invalid Argument.\nUse todo, done or in-progress")
 
     def save_tasks(self):
         data = {
@@ -119,7 +134,14 @@ def main():
         case 'mark-done':
             print("Task marked as done")
         case 'list':
-            print("Task listed")
+            if len(sys.argv) > 3:
+                print("Invalid!\nUsage: python main.py list [optional arg]")
+                return
+            try:
+                app.list_tasks(sys.argv[2])
+            except IndexError:
+                app.list_tasks()
+
         case _:
             print("Invalid command")
 
