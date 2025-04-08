@@ -63,8 +63,15 @@ class TodoApp():
             self.save_tasks()
             print(f"Task updated successfully (ID: {task_id})")
 
-    def delete_task(self, task: Task):
-        pass
+    def delete_task(self, task_id):
+        task = self.get_task(task_id)
+        if not task:
+            print(f"Task {task_id} does not exist")
+        else:
+            self.tasks.pop(task_id)
+            self.total_tasks -= 1
+            self.save_tasks()
+            print(f"Task deleted successfully (ID: {task_id})")
 
     def list_task(self, task: Task):
         pass
@@ -103,7 +110,10 @@ def main():
                 return
            app.update_task(sys.argv[2], sys.argv[3])
         case 'delete':
-           print("Task deleted")
+           if len(sys.argv) != 3:
+                print("Invalid!\nUsage: python main.py delete task_id")
+                return
+           app.delete_task(sys.argv[2])
         case 'mark-in-progress':
             print("Task marked in progress")
         case 'mark-done':
